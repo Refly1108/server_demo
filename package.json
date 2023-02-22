@@ -1,0 +1,19 @@
+{
+  "name": "server_dome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "is-generator-function": "^1.0.10",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.14.1",
+    "koa-body": "^4.2.0",
+    "koa-router": "^9.4.0",
+    "koa2-cors": "^2.0.6"
+  }
+}
