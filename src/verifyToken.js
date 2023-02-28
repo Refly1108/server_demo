@@ -1,43 +1,49 @@
-const jwt = require('jsonwebtoken')
-let secret =  '123456';
+
+const createHash = require('crypto');
+let TOKEN =  'wxa4065fe099206a50';
 async function verifyToken(ctx) {
-    const dataString = ctx.header.authorization;
-    const idcard = ctx.request.body.name+ctx.request.body.password;
-    console.log('----------'+idcard);
-    console.log('---------- dataString'+dataString);
-    try {
-        // const dataArr = dataString.split(' ');
-        // const token = dataArr[1];
-    
-        console.log(111111111111);
-        let playload = await jwt.verify(dataString, secret);
-        console.log("111111111111"+playload);
-        const { data } = playload;
-        console.log(data);
-        if (data === idcard) {
-            ctx.status = 200 //这里非常重要，只有设置了status，koa-router才识别请求正确继续进入路由
-            ctx.body = {
-                status: 0
-                
-              }
-        }else{
-            ctx.body = {
-                status: 1
-                
-              }
+    console.log(ctx.request.url);
+   let url = ctx.request.url;
 
-        }
 
-    } catch (error) {
-        console.log(error);
-        ctx.body = {
-            "error": {
-                "type": "LOGIN_FAILED",
-                "message": "未知",
-            }
+   let signature = getparams(url,'signature');
+   let timestamp =getparams(url,'timestamp');
+   let nonce  =  getparams(url,'nonce');
+   let echostr = getparams(url,'echostr');
+   let token = TOKEN;
+   let array = [token,timestamp,nonce];
+   array.sort();
+   let string='';
+   for (let index = 0; index < array.length; index++) {
+    string += index[index];
+   }
 
-        }
-    }
+//    if(sha1(string)==signature){
+    console.log(echostr);
+    ctx.body = {
+        echostr:echostr
+      }
+//    }
 
 }
+const sha1 = (content) => encrypt('sha1', content)
+const encrypt = (algorithm, content) => {
+    let hash = createHash(algorithm)
+    hash.update(content)
+    return hash.digest('hex')
+  }
+
+const getparams = (url, key) => {
+    let str = url;
+    let param = "";
+    console.log(url);
+    console.log(key);
+    param = str.substring(str.indexOf(key) + key.length + 1);
+    if (param.indexOf("&") > -1) {
+      param = param.substring(0, param.indexOf("&"));
+    }
+    console.log(param);
+    return param;
+  };
+  
 module.exports = verifyToken
